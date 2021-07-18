@@ -16,5 +16,3 @@ server_scripts {
     'config.lua',
     'server/server.lua'
 } 
-
-dependency "es_extended"
