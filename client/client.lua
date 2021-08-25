@@ -1,68 +1,67 @@
-ESX = nil 
-local PlayerData              = {}
-
-Citizen.CreateThread(function() 
-	while ESX == nil do 
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end) 
-		Citizen.Wait(1) 
-	end 
-		PlayerData = ESX.GetPlayerData() 
-end) 
-
 local hosDuration = 0
 local location = nil
+local playerPed = PlayerPedId()
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler("esx:playerLoaded", function(xPlayer)
+	while (ESX == nil) do
+        Citizen.Wait(100)
+    end
+	
+    ESX.PlayerData = xPlayer
+ 	ESX.PlayerLoaded = true
+	playerPed = PlayerPedId()
+end)
 
-function thread()
-	if location ~= nil then
-		if hosDuration > 0 then
-			hosDuration = hosDuration - 1
-			
-			local playerPed = PlayerPedId()
-			local playerPos = GetEntityCoords(playerPed)
-			-- local distance = #(playerPos - location.incoords)
-			local distance = Vdist(location.incoords[1], location.incoords[2], location.incoords[3], playerPos['x'], playerPos['y'], playerPos['z'])
-			
-			if location.distance > 20 and Config.CheckDistance then
-				SetEntityCoords(playerPed, location.incoords[1], location.incoords[2], location.incoords[3])
-				hosDuration = hosDuration + 30 -- 30 seconds.
-				if hosDuration > Config.MaxTime then
-					hosDuration = Config.MaxTime
-				end
-				TriggerEvent('chatMessage', '[EMS]', { 0, 128, 255 }, " your hospital stay time was extended as you were not officially discharged.")
-				TriggerEvent('chatMessage', '[EMS]', { 0, 128, 255 }, ' You have ' .. hosDuration .. ' seconds left in hospital.')
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
+end)
+
+function InHospital()
+	Citizen.CreateThread(function()
+		while (location ~= nil) do
+			if hosDuration > 0 then
+				hosDuration = hosDuration - 1
 				
-				exports['bixbi_core']:Notify('', 'Your hospital stay time was extended as you were not officially discharged.')
-				exports['bixbi_core']:Notify('', 'You have ' .. hosDuration .. ' seconds left in hospital.')
-			end
+				playerPed = PlayerPedId()
+				local distance = #(GetEntityCoords(playerPed) - location.incoords)
 
-			if hosDuration == 10 or hosDuration == 30 or hosDuration == 60 or hosDuration == 120 or hosDuration == 300 then
-				exports['bixbi_core']:Notify('', 'You have ' .. hosDuration .. ' seconds left in hospital.')
-				TriggerEvent('chatMessage', '[EMS]', { 0, 128, 255 }, ' You have ' .. hosDuration .. ' seconds left in hospital.')
+				if distance > location.distance and Config.CheckDistance then
+					SetEntityCoords(playerPed, location.incoords)
+					hosDuration = hosDuration + 30 -- 30 seconds.
+					if hosDuration > Config.MaxTime then
+						hosDuration = Config.MaxTime
+					end
+					exports['bixbi_core']:Notify('', 'Your hospital stay time was extended as you were not officially discharged.', 10000)
+				end
+	
+				if hosDuration == 10 or hosDuration == 30 or hosDuration == 60 or hosDuration == 120 or hosDuration == 300 then
+					exports['bixbi_core']:Notify('', 'You have ' .. hosDuration .. ' seconds left in hospital.', 10000)
+				end
+			elseif location ~= nil then
+				TriggerEvent("bixbi_hospital:release")
 			end
-		elseif location ~= nil then
-			TriggerEvent("bixbi_hospital:release")
+			Citizen.Wait(1000)
 		end
-	end
-
-	SetTimeout(1000, thread)
+	end)
 end
-
-thread()
 
 RegisterNetEvent("bixbi_hospital:send")
 AddEventHandler("bixbi_hospital:send", function(duration, inputLocation)
 	local loc = Config.Locations[inputLocation:upper()]
 	if loc ~= nil then
-		local playerPed = GetPlayerPed(-1)
+		playerPed = PlayerPedId()
 		if DoesEntityExist(playerPed) then
 			
 			DoScreenFadeOut(2000)
 			Citizen.Wait(2000)
 
+			InHospital()
 			location = loc
 			hosDuration = duration
 
-			SetEntityCoords(playerPed, loc.incoords[1], loc.incoords[2], loc.incoords[3])
+			SetEntityCoords(playerPed, loc.incoords)
 			RemoveAllPedWeapons(playerPed, true)
 			if IsPedInAnyVehicle(playerPed, false) then
 				ClearPedTasksImmediately(playerPed)
@@ -87,11 +86,10 @@ end)
 
 RegisterNetEvent("bixbi_hospital:release")
 AddEventHandler("bixbi_hospital:release", function()
-	local playerPed = GetPlayerPed(-1)
-	SetEntityCoords(playerPed, location.outcoords[1], location.outcoords[2], location.outcoords[3])
+	playerPed = PlayerPedId()
+	SetEntityCoords(playerPed, location.outcoords)
 
 	exports['bixbi_core']:Notify('', 'You have been released from ' .. location.label .. '.')
-	TriggerEvent('chatMessage', '[EMS]', { 0, 128, 255 }, ' You have been released from ' .. location.label .. '.')
 
 	hosDuration = 0
 	location = nil
