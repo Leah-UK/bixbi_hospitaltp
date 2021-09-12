@@ -1,6 +1,5 @@
 local hosDuration = 0
 local location = nil
-local playerPed = PlayerPedId()
 RegisterNetEvent('esx:playerLoaded')
 AddEventHandler("esx:playerLoaded", function(xPlayer)
 	while (ESX == nil) do
@@ -9,7 +8,6 @@ AddEventHandler("esx:playerLoaded", function(xPlayer)
 	
     ESX.PlayerData = xPlayer
  	ESX.PlayerLoaded = true
-	playerPed = PlayerPedId()
 end)
 
 RegisterNetEvent('esx:onPlayerLogout')
@@ -24,7 +22,7 @@ function InHospital()
 			if hosDuration > 0 then
 				hosDuration = hosDuration - 1
 				
-				playerPed = PlayerPedId()
+				local playerPed = PlayerPedId()
 				local distance = #(GetEntityCoords(playerPed) - location.incoords)
 
 				if distance > location.distance and Config.CheckDistance then
@@ -51,7 +49,7 @@ RegisterNetEvent("bixbi_hospital:send")
 AddEventHandler("bixbi_hospital:send", function(duration, inputLocation)
 	local loc = Config.Locations[inputLocation:upper()]
 	if loc ~= nil then
-		playerPed = PlayerPedId()
+		local playerPed = PlayerPedId()
 		if DoesEntityExist(playerPed) then
 			
 			DoScreenFadeOut(2000)
@@ -86,8 +84,7 @@ end)
 
 RegisterNetEvent("bixbi_hospital:release")
 AddEventHandler("bixbi_hospital:release", function()
-	playerPed = PlayerPedId()
-	SetEntityCoords(playerPed, location.outcoords)
+	SetEntityCoords(PlayerPedId(), location.outcoords)
 
 	exports['bixbi_core']:Notify('', 'You have been released from ' .. location.label .. '.')
 

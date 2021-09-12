@@ -7,7 +7,7 @@ ESX.RegisterCommand('hospital', 'user', function(xPlayer, args, showError)
 	end
 end, true, {help = 'Send person to hospital.', validate = false, arguments = {
 	{name = 'target', help = 'Player ID', type = 'number'},
-	{name = 'duration', help = 'Seconds', type = 'number'},
+	{name = 'duration', help = 'Minutes', type = 'number'},
 	{name = 'location', help = 'P = Pillbox, S = Sandy, B = Paleto Bay', type = 'string'}
 }})
 
@@ -33,17 +33,15 @@ AddEventHandler('bixbi_hospitaltp:Hospital', function(targetId, duration, locati
 		xTarget.addInventoryItem(k, v)
 	end
 
-	if duration == nil or duration < 10 then
-		duration = 10
-	elseif duration > Config.MaxTime then
-		duration = Config.MaxTime
-	end
+	if (duration == nil) then duration = 5 end
+	if (duration > Config.MaxTime) then duration = Config.MaxTime end
+	duration = duration * 60000
 
 	if location == nil then
 		location = Config.DefaultLocation
 	end
 
-	TriggerClientEvent('chatMessage', -1, '[EMS]', { 0, 128, 255 }, " " .. GetPlayerName(targetId) ..' hospitalized for '.. duration ..' seconds by [' .. xPlayer.job.grade_label .. '] ' .. xPlayer.name )
+	TriggerClientEvent('chatMessage', -1, '[EMS]', { 0, 128, 255 }, " " .. GetPlayerName(targetId) ..' hospitalized for '.. duration ..' minutes by [' .. xPlayer.job.grade_label .. '] ' .. xPlayer.name )
 	TriggerClientEvent('bixbi_hospital:send', targetId, duration, location)
 end)
 

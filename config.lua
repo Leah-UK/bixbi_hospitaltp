@@ -1,6 +1,6 @@
 Config = {}
 
-Config.MaxTime = 600 -- 10 Minutes (600 seconds)
+Config.MaxTime = 10 -- 10 Minutes (600 seconds)
 Config.CheckDistance = true -- When true, going too far from the teleport point will teleport the player back, and add time.
 
 Config.Locations = {
