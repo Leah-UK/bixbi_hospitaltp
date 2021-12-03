@@ -25,12 +25,13 @@ AddEventHandler('bixbi_hospitaltp:Hospital', function(targetId, duration, locati
 	local xPlayer = ESX.GetPlayerFromId(source)
 	local xTarget = ESX.GetPlayerFromId(targetId)
 
-	for k,v in ipairs(xTarget.loadout) do
-		xTarget.removeWeapon(v.name)
-	end
+	-- for k,v in ipairs(xTarget.loadout) do
+	-- 	xTarget.removeWeapon(v.name)
+	-- end
+	if (Config.OxInventory) then TriggerServerEvent('ox_inventory:disarm', targetId) end
 
 	for k, v in pairs(Config.Items) do
-		xTarget.addInventoryItem(k, v)
+		exports.bixbi_core:addItem(targetId, k, v)
 	end
 
 	if (duration == nil) then duration = 5 end
@@ -41,7 +42,13 @@ AddEventHandler('bixbi_hospitaltp:Hospital', function(targetId, duration, locati
 		location = Config.DefaultLocation
 	end
 
-	TriggerClientEvent('chatMessage', -1, '[EMS]', { 0, 128, 255 }, " " .. GetPlayerName(targetId) ..' hospitalized for '.. duration ..' minutes by [' .. xPlayer.job.grade_label .. '] ' .. xPlayer.name )
+	local chatMessage = " " .. GetPlayerName(targetId) ..' hospitalized for '.. duration ..' minutes by [' .. xPlayer.job.grade_label .. '] ' .. xPlayer.name
+	for k, v in pairs(ESX.GetExtendedPlayers()) do
+		if (v.job.name == 'police' or v.job.name == 'ambulance') then
+			TriggerClientEvent('chatMessage', v.playerId, '[EMS]', { 0, 128, 255 }, chatMessage)
+		end
+	end
+
 	TriggerClientEvent('bixbi_hospital:send', targetId, duration, location)
 end)
 

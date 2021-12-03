@@ -1,21 +1,5 @@
 local hosDuration = 0
 local location = nil
-RegisterNetEvent('esx:playerLoaded')
-AddEventHandler("esx:playerLoaded", function(xPlayer)
-	while (ESX == nil) do
-        Citizen.Wait(100)
-    end
-	
-    ESX.PlayerData = xPlayer
- 	ESX.PlayerLoaded = true
-end)
-
-RegisterNetEvent('esx:onPlayerLogout')
-AddEventHandler('esx:onPlayerLogout', function()
-	ESX.PlayerLoaded = false
-	ESX.PlayerData = {}
-end)
-
 function InHospital()
 	Citizen.CreateThread(function()
 		while (location ~= nil) do
@@ -90,4 +74,20 @@ AddEventHandler("bixbi_hospital:release", function()
 
 	hosDuration = 0
 	location = nil
+end)
+
+--[[--------------------------------------------------
+Setup
+--]]--------------------------------------------------
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler("esx:playerLoaded", function(xPlayer)
+	while (ESX == nil) do Citizen.Wait(100) end	
+    ESX.PlayerData = xPlayer
+ 	ESX.PlayerLoaded = true
+end)
+
+RegisterNetEvent('esx:onPlayerLogout')
+AddEventHandler('esx:onPlayerLogout', function()
+	ESX.PlayerLoaded = false
+	ESX.PlayerData = {}
 end)
