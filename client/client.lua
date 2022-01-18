@@ -26,9 +26,9 @@ function InHospital()
 					exports['bixbi_core']:Notify('', 'Your hospital stay time was extended as you were not officially discharged.', 10000)
 				end
 	
-				if hosDuration == 10 or hosDuration == 30 or hosDuration == 60 or hosDuration == 120 or hosDuration == 300 then
-					exports['bixbi_core']:Notify('', 'You have ' .. hosDuration .. ' seconds left in hospital.', 10000)
-				end
+				-- if hosDuration == 10 or hosDuration == 30 or hosDuration == 60 or hosDuration == 120 or hosDuration == 300 then
+				-- 	exports['bixbi_core']:Notify('', 'You have ' .. hosDuration .. ' seconds left in hospital.', 10000)
+				-- end
 			elseif location ~= nil then
 				TriggerEvent("bixbi_hospital:release")
 			end
@@ -57,8 +57,8 @@ AddEventHandler("bixbi_hospital:send", function(duration, inputLocation)
 				ClearPedTasksImmediately(playerPed)
 			end
 
-			exports['bixbi_core']:Notify('', 'You have been sent to ' .. loc.label .. ' for ' .. duration .. ' seconds.')
-			TriggerEvent('chatMessage', '[EMS]', { 0, 128, 255 }, ' You have been sent to ' .. loc.label .. ' for ' .. duration .. ' seconds.')
+			exports['bixbi_core']:Notify('', 'You have been sent to ' .. loc.label .. ' for ' .. duration / 60000 .. ' minute(s).')
+			TriggerEvent('chatMessage', '[EMS]', { 0, 128, 255 }, ' You have been sent to ' .. loc.label .. ' for ' .. duration / 60000 .. ' minute(s).')
 		
 			Citizen.Wait(1500)
 			DoScreenFadeIn(2000)
