@@ -17,7 +17,7 @@ end
 
 function b:RegisterCommands()
     if (Config.Framework == "ESX") then
-        self['Framework'].RegisterCommand('hospital', 'user'), function(xPlayer, args, showError)
+        self['Framework'].RegisterCommand('hospital', 'user', function(xPlayer, args, showError)
             if (self.GetPlayerJob(xPlayer) ~= Config.Job or not args.target or args.duration) then return end
             self:Hospital(source, args.target, args.duration, args.location)
         end, false, {help = 'Send person to hospital.', arguments = {
@@ -38,7 +38,7 @@ function b:RegisterCommands()
             local target, duration, player = args[1] or source, args[2] or 5, self:GetPlayerFromId(source)
             -- local duration = args[2] or 5
             -- local player = self:GetPlayerFromId(source)
-            if (not player) return end
+            if (not player) then return end
             if (self.GetPlayerJob(player) ~= Config.Job) then return end
             self:Hospital(source, target, duration, args[3])
         end, 'user')
@@ -46,7 +46,7 @@ function b:RegisterCommands()
         self['Framework'].Commands.Add('unhospital', 'Release person from hospital.', { { name = 'target', help = 'Player ID' } }, false, function(source, args)
             local target, player = args[1] or source, self:GetPlayerFromId(source)
             -- local player = self:GetPlayerFromId(source)
-            if (not player) return end
+            if (not player) then return end
             if (self.GetPlayerJob(player) ~= Config.Job) then return end
             TriggerClientEvent('bixbi_hospitaltp:Release', target)
         end, 'user')

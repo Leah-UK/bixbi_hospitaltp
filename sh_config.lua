@@ -25,7 +25,7 @@ Config = {
             distance = 20
         }
     },
-    Config.Items = {
+    Items = {
         burger = 2, -- To disable remove "burger" and "water" leaving just {}.
         water = 2
     }
