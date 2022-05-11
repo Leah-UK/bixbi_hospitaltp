@@ -4,19 +4,23 @@ Creation Date:	15/03/21
 fx_version 'cerulean'
 game 'gta5'
 author 'Leah#0001'
-version '1.1.3'
-versioncheck 'https://raw.githubusercontent.com/Leah-UK/bixbi_hospitaltp/main/fxmanifest.lua'
+version '2.0'
+versioncheck 'https://raw.githubusercontent.com/Bixbi-FiveM/bixbi_hospitaltp/main/fxmanifest.lua'
 lua54 'yes'
 
 shared_scripts {
-	'@es_extended/imports.lua', -- Remove if you're using a version before ESX 1.3
-	'config.lua'
+	'@ox_lib/init.lua',
+	'sh_config.lua'
 }
 
 client_scripts {
-    'client/client.lua'
-} 
- 
+	'client/cl_framework.lua',
+	'client/cl_functions.lua'
+}
+
 server_scripts {
-    'server/server.lua'
+	'@oxmysql/lib/MySQL.lua',
+	'server/sv_framework.lua',
+	'server/sv_functions.lua',
+	'server/sv_version.lua'
 }

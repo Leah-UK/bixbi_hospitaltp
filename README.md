@@ -1,24 +1,32 @@
-<h1 align='center'><a href='https://discord.link/bixbi'>Discord</a></h1>
-<p align='center'><a href='https://forum.cfx.re/u/Leah_UK/summary'>FiveM Profile</a> | <a href='https://ko-fi.com/bixbi'>Support Me Here</a><br></p>
+### <p align='center'>[Organisation](https://github.com/Bixbi-FiveM) | [Support Me Here](https://ko-fi.com/bixbi) | [FiveM Profile](https://forum.cfx.re/u/Leah_UK/summary)</p>
+------
+
+# Information
+[**Bixbi_HospitalTP**](https://forum.cfx.re/t/esx-release-bixbi-hospital-teleport/2470070) is a *simple* teleport to hospital script.
+
+You can define how long to send someone to hospital for (*with a max duration*). You can also define in the config if they should be given items for their stay, such as food. Finally, there's the ability to check the range of the player from the "hospital", if they get too far away it will teleport them back.
+
+### [Demonstration Video](https://youtu.be/JhATMxlgoNs)
 
 ---
 
-Commands:
-
-- /hospital id duration <i>location</i>
-- /unhospital id
-
-<b>duration</b>: Seconds. <b>location</b>: Completely optional. You can define the default in config.lua.
+# Requirements
+- [ox_lib](https://github.com/overextended/ox_lib)
 
 ---
 
-<h2 align='center'>Requirements</h2>
-
-- ESX v1 Final, ESX v1.2 or ESX Legacy  
-<i> Can be easily modified for other frameworks</i>
-- <a href='https://github.com/Leah-UK/bixbi_core'>bixbi_core</a>
-- OneSync
+# Exports
+## Client
+#### Send to Hospital
+```lua
+TriggerEvent('bixbi_hospitaltp:Send', duration, location) -- sent from client
+TriggerClientEvent('bixbi_hospitaltp:Send', source, duration, location) -- sent from server
+```
+#### Release from Hospital
+```lua
+TriggerEvent('bixbi_hospitaltp:Release') -- sent from client
+TriggerClientEvent('bixbi_hospitaltp:Release', source) -- sent from server
+```
 
 ---
-
-<p align='center'><i>Feel free to modify to your liking. Please keep my name <b>(Leah#0001)</b> in the credits of the fxmanifest. <b>If your modification is a bug-fix I ask that you make a pull request, this is a free script; please contribute when you can.</b></i></p>
+<p align='center'>Feel free to modify to your liking. Please keep my name <b>(Leah#0001)</b> in the credits of the fxmanifest. <i>If your modification is a bug-fix I ask that you make a pull request, this is a free script; please contribute when you can.</i></p>
